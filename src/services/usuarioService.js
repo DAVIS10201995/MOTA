@@ -18,7 +18,7 @@ const UsuarioService = {
       .select(`
         *,
         area: id_area (id_area, n_area),
-        funcion: id_funcion (id_funcion, nombre)
+        funcion: id_funcion (id_funcion, n_funcion)
       `);
     
     if (error) throw new Error(error.message);
