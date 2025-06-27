@@ -1,4 +1,4 @@
-const supabase = require('../config/SupabaseClient');
+const supabase = require('../config/supabaseClient');
 const Usuario = {
   tableName: 'usuarios',
 
@@ -9,7 +9,13 @@ const Usuario = {
     id_funcion: { type: 'integer', references: 'funcion(id_funcion)' },
     telefono: { type: 'varchar', length: 20 },
     telefono_consultorio: { type: 'varchar', length: 20 },
-    contrasena: { type: 'varchar', length: 100, notNull: true }
+    contrasena: { type: 'varchar', length: 100, notNull: true },
+    correo: { type: 'varchar', length: 255, notNull: true}
+  },
+  // Validación de correo electrónico
+  validateEmail: function(correo) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(correo);
   }
 };
 
