@@ -1,5 +1,5 @@
 const supabase = require('../config/supabaseClient');
-const Area = require('../models/area');
+const Area = require('../modelsArea');
 
 const AreaService = {
   async createArea(n_area) {
