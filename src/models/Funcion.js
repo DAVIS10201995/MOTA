@@ -1,4 +1,4 @@
-const supabase = require('../config/SupabaseClient');
+const supabase = require('../config/supabaseClient');
 
 const Funcion = {
   tableName: 'funcion',
