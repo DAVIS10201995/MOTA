@@ -1,14 +1,20 @@
-// config/supabaseClient.js
 const { createClient } = require('@supabase/supabase-js');
 
-// Configura estas variables en tu archivo .env
+// Verificación estricta de variables
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
-  throw new Error('Faltan variables de Supabase. Verifica Render Environment.');
+  throw new Error('❌ Variables SUPABASE_URL o SUPABASE_KEY no definidas');
 }
 
-const supabase = createClient(
-  process.env.SUPABASE_URL, 
-  process.env.SUPABASE_KEY
-);
+// Configuración explícita
+const options = {
+  auth: {
+    persistSession: false,
+    autoRefreshToken: false
+  },
+  db: {
+    schema: 'public'
+  }
+};
 
-module.exports = supabase;
+// Exporta DIRECTAMENTE la instancia (no como objeto)
+module.exports = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, options);

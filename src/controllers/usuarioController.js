@@ -1,4 +1,5 @@
 const UsuarioService = require('../services/usuarioService');
+const  supabase  = require('../config/SupabaseClient');
 
 const UsuarioController = {
   crear: async (req, res) => {
@@ -73,26 +74,54 @@ const UsuarioController = {
 
 
   login: async (req, res) => {
-    try {
-      const { correo, contrasena } = req.body;
-      
-      if (!correo || !contrasena) {
-        return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-      }
-
-      const usuario = await UsuarioService.buscarPorCorreo(correo);
-      
-      if (!usuario || usuario.contrasena !== contrasena) {
-        return res.status(401).json({ message: 'Credenciales inválidas' });
-      }
-      
-      // Eliminamos la contraseña de la respuesta
-      const { contrasena: _, ...usuarioSinPassword } = usuario;
-      res.json(usuarioSinPassword);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+  try {
+    const { correo, contrasena } = req.body;
+    
+    if (!correo || !contrasena) {
+      return res.status(400).json({ message: 'Credenciales incompletas' });
     }
-  },
+
+    // Debug: Verifica que supabase.rpc existe
+    if (!supabase || !supabase.rpc) {
+      console.error('Error: supabase.rpc no está disponible');
+      throw new Error('Configuración incorrecta de Supabase');
+    }
+
+    // Verificación en dos pasos (más robusto)
+    // 1. Primero obtén el usuario
+    const { data: usuario, error: userError } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('correo', correo)
+      .single();
+
+    if (userError || !usuario) {
+      return res.status(401).json({ message: 'Credenciales inválidas' });
+    }
+
+    // 2. Luego verifica la contraseña
+    const { data: isValid, error: rpcError } = await supabase
+      .rpc('verificar_contrasena', {
+        correo_param: correo,
+        contrasena_plana: contrasena
+      });
+
+    if (rpcError || !isValid) {
+      return res.status(401).json({ message: 'Credenciales inválidas' });
+    }
+
+    // Elimina la contraseña de la respuesta
+    const { contrasena: _, ...usuarioSinPassword } = usuario;
+    res.json(usuarioSinPassword);
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).json({ 
+      error: error.message,
+      detalles: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+},
   verificarCorreo: async (req, res) => {
     try {
       const { correo } = req.params;
