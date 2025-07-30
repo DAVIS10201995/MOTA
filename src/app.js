@@ -12,10 +12,12 @@ app.use(express.json());
 const areaRoutes = require('./routes/areaRoutes');
 const funcionRoutes = require('./routes/funcionRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const productoRoutes = require('./routes/productoRutes');
 
 app.use('/api/areas', areaRoutes);
 app.use('/api/funciones', funcionRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/productos', productoRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {
