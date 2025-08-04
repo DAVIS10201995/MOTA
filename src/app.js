@@ -14,12 +14,14 @@ const funcionRoutes = require('./routes/funcionRoutes');
 const usuarioRoutes = require('./routes/usuarioRoutes');
 const productoRoutes = require('./routes/productoRutes');
 const estatus_pRoutes = require('./routes/estatusPRutes');
+const estatusPagoRutes = require('./routes/estatusPagoRutes');
 
 app.use('/api/areas', areaRoutes);
 app.use('/api/funciones', funcionRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/estatusP', estatus_pRoutes);
+app.use('/api/estatus-pago', estatusPagoRutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {
