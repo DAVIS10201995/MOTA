@@ -10,7 +10,8 @@ const Usuario = {
     telefono: { type: 'varchar', length: 20 },
     telefono_consultorio: { type: 'varchar', length: 20 },
     contrasena: { type: 'varchar', length: 100, notNull: true },
-    correo: { type: 'varchar', length: 255, notNull: true}
+    correo: { type: 'varchar', length: 255, notNull: true},
+    estado: { type: 'estado_usuario', notNull: true, default: 'activo' } 
   },
   // Validación de correo electrónico
   validateEmail: function(correo) {

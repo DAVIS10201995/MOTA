@@ -17,6 +17,10 @@ const UsuarioService = {
 
     if (existe) throw new Error('El correo electrónico ya está registrado');
 
+    if (!usuarioData.estado) {
+      usuarioData.estado = 'activo';
+    }
+
     const { data, error } = await supabase
       .from(Usuario.tableName)
       .insert([usuarioData])
@@ -33,10 +37,46 @@ const UsuarioService = {
         *,
         area: id_area (id_area, n_area),
         funcion: id_funcion (id_funcion, n_funcion)
-      `);
+      `).order('estado',{ ascending: true});
     
     if (error) throw new Error(error.message);
     return data;
+  },
+
+  async obtenerActivos() {
+    const { data, error } = await supabase
+      .from(Usuario.tableName)
+      .select(`
+        *,
+        area: id_area (id_area, n_area),
+        funcion: id_funcion (id_funcion, n_funcion)
+      `)
+      .eq('estado', 'activo');
+    
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
+  async suspenderUsuario(id) {
+    const { data, error } = await supabase
+      .from(Usuario.tableName)
+      .update({ estado: 'suspendido' })
+      .eq('id_usuario', id)
+      .select();
+    
+    if (error) throw new Error(error.message);
+    return data[0];
+  },
+
+  async activarUsuario(id) {
+    const { data, error } = await supabase
+      .from(Usuario.tableName)
+      .update({ estado: 'activo' })
+      .eq('id_usuario', id)
+      .select();
+    
+    if (error) throw new Error(error.message);
+    return data[0];
   },
 
    async obtenerPorId(id) {

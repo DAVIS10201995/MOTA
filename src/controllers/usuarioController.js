@@ -17,13 +17,43 @@ const UsuarioController = {
         telefono,
         telefono_consultorio,
         contrasena,
-        correo
+        correo,
+        estado
       };
 
       const nuevoUsuario = await UsuarioService.crearUsuario(usuarioData);
       res.status(201).json(nuevoUsuario);
     } catch (error) {
       res.status(400).json({ error: error.message });
+    }
+  },
+
+  suspender: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const usuario = await UsuarioService.suspenderUsuario(id);
+      res.json(usuario);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  activar: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const usuario = await UsuarioService.activarUsuario(id);
+      res.json(usuario);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  obtenerActivos: async (req, res) => {
+    try {
+      const usuarios = await UsuarioService.obtenerActivos();
+      res.json(usuarios);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   },
 
