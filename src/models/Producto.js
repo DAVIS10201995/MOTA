@@ -7,6 +7,7 @@ const Producto = {
     id_producto: { type: 'serial', primaryKey: true },
     n_producto: { type: 'varchar', length: 100, notNull: true },
     descripcion: { type: 'text' },
+    cantidad: { type: 'integer', default: 0 },
     created_at: { type: 'timestamp', default: 'CURRENT_TIMESTAMP' }
   },
 
