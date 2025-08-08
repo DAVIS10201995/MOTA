@@ -4,7 +4,7 @@ const  supabase  = require('../config/SupabaseClient');
 const UsuarioController = {
   crear: async (req, res) => {
     try {
-      const { nombre_completo, correo, id_area, id_funcion, telefono, telefono_consultorio, contrasena } = req.body;
+      const { nombre_completo, correo, id_area, id_funcion, telefono, telefono_consultorio, contrasena, estado } = req.body;
       
       if (!correo) {
         return res.status(400).json({ error: 'El campo correo es requerido' });

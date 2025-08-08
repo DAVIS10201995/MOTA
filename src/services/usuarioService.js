@@ -3,6 +3,16 @@ const Usuario = require('../models/Usuario');
 
 const UsuarioService = {
   async crearUsuario(usuarioData) {
+
+    const estadosPermitidos = ['activo', 'suspendido']; // Ejemplo
+
+  // Si no se envía estado, usa 'activo' (valor por defecto en la tabla)
+  usuarioData.estado = usuarioData.estado || 'activo';
+
+  // Validar que el estado sea permitido
+  if (!estadosPermitidos.includes(usuarioData.estado)) {
+    throw new Error(`Estado inválido. Valores permitidos: ${estadosPermitidos.join(', ')}`);
+  }
     // Validar correo
     if (!Usuario.validateEmail(usuarioData.correo)) {
       throw new Error('Formato de correo electrónico inválido');
