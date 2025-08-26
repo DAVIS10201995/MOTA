@@ -150,7 +150,22 @@ const UsuarioService = {
     
     if (error) throw new Error(error.message);
     return data;
-  }
+  },
+
+  async obtenerPorFuncion(id_funcion) {
+  const { data, error } = await supabase
+    .from(Usuario.tableName)
+    .select(`
+      *,
+      area: id_area (id_area, n_area),
+      funcion: id_funcion (id_funcion, n_funcion)
+    `)
+    .eq('id_funcion', id_funcion)
+    .order('nombre_completo', { ascending: true });
+  
+  if (error) throw new Error(error.message);
+  return data;
+}
 };
 
 module.exports = UsuarioService;

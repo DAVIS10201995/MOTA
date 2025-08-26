@@ -174,7 +174,29 @@ const UsuarioController = {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  },
+  obtenerPorFuncion: async (req, res) => {
+  try {
+    const { id_funcion } = req.params;
+    
+    // Validar que el id_funcion sea un número
+    if (isNaN(id_funcion)) {
+      return res.status(400).json({ error: 'ID de función inválido' });
+    }
+
+    const usuarios = await UsuarioService.obtenerPorFuncion(parseInt(id_funcion));
+    
+    if (!usuarios || usuarios.length === 0) {
+      return res.status(404).json({ 
+        message: 'No se encontraron usuarios para esta función' 
+      });
+    }
+    
+    res.json(usuarios);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
+}
 };
 
 module.exports = UsuarioController;

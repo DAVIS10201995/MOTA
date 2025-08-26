@@ -11,6 +11,7 @@ router.get('/', UsuarioController.obtenerTodos);
 router.get('/:id', UsuarioController.obtenerPorId);
 router.put('/:id', UsuarioController.actualizar);
 router.delete('/:id', UsuarioController.eliminar);
+router.get('/por-funcion/:id_funcion', UsuarioController.obtenerPorFuncion);
 
 // Autenticación
 router.post('/login', UsuarioController.login);
