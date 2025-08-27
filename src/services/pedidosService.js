@@ -114,6 +114,49 @@ class PedidoService {
 
   return data;
 }
+// Obtener pedidos por estatus
+static async getPedidosByEstatus(idEstatus) {
+  const { data, error } = await supabase
+    .from('pedidos')
+    .select(`
+      *,
+      cliente:usuarios!id_cliente(nombre_completo),
+      estatus:estatus_p!id_estatusp(n_estatusp),
+      prioridad:prioridad!id_prioridad(n_prioridad),
+      estatus_pago:estatus_pago!id_estatuspago(n_estatuspago)
+    `)
+    .eq('id_estatusp', idEstatus)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error en Supabase:', error);
+    throw new Error('Error al cargar pedidos por estatus');
+  }
+
+  return data;
+}
+
+// Obtener pedidos por prioridad
+static async getPedidosByPrioridad(idPrioridad) {
+  const { data, error } = await supabase
+    .from('pedidos')
+    .select(`
+      *,
+      cliente:usuarios!id_cliente(nombre_completo),
+      estatus:estatus_p!id_estatusp(n_estatusp),
+      prioridad:prioridad!id_prioridad(n_prioridad),
+      estatus_pago:estatus_pago!id_estatuspago(n_estatuspago)
+    `)
+    .eq('id_prioridad', idPrioridad)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error en Supabase:', error);
+    throw new Error('Error al cargar pedidos por prioridad');
+  }
+
+  return data;
+}
 }
 
 module.exports = PedidoService;

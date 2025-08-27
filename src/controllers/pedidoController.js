@@ -92,6 +92,25 @@ class PedidoController {
       res.status(400).json({ error: error.message });
     }
   }
+  // Obtener pedidos por estatus
+static async getByEstatus(req, res) {
+  try {
+    const pedidos = await PedidoService.getPedidosByEstatus(req.params.idEstatus);
+    res.json(pedidos);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
+// Obtener pedidos por prioridad
+static async getByPrioridad(req, res) {
+  try {
+    const pedidos = await PedidoService.getPedidosByPrioridad(req.params.idPrioridad);
+    res.json(pedidos);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
 }
 
 module.exports = PedidoController;

@@ -14,4 +14,7 @@ router.put('/:id/estatus', PedidoController.changeStatus);
 router.get('/cliente/:idCliente', PedidoController.getByCliente);
 router.put('/:id/productos', PedidoController.updateProducts);
 
+router.get('/estatus/:idEstatus', PedidoController.getByEstatus);
+router.get('/prioridad/:idPrioridad', PedidoController.getByPrioridad);
+
 module.exports = router;
