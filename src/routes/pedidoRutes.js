@@ -2,19 +2,22 @@ const express = require('express');
 const router = express.Router();
 const PedidoController = require('../controllers/pedidoController');
 
+// IMPORTANTE: Rutas específicas ANTES de rutas con parámetros dinámicos
+
+// Rutas especializadas (deben ir PRIMERO)
+router.get('/cliente/:idCliente', PedidoController.getByCliente);
+router.get('/estatus/:idEstatus', PedidoController.getByEstatus);
+router.get('/prioridad/:idPrioridad', PedidoController.getByPrioridad);
+
 // Rutas básicas CRUD
 router.post('/', PedidoController.create);
 router.get('/', PedidoController.getAll);
-router.get('/:id', PedidoController.getById);
+router.get('/:id', PedidoController.getById); // Esta debe ir después de las específicas
 router.put('/:id', PedidoController.update);
 router.delete('/:id', PedidoController.delete);
 
-// Rutas especializadas
+// Rutas de acción sobre pedido específico
 router.put('/:id/estatus', PedidoController.changeStatus);
-router.get('/cliente/:idCliente', PedidoController.getByCliente);
 router.put('/:id/productos', PedidoController.updateProducts);
-
-router.get('/estatus/:idEstatus', PedidoController.getByEstatus);
-router.get('/prioridad/:idPrioridad', PedidoController.getByPrioridad);
 
 module.exports = router;
