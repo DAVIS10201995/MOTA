@@ -1,6 +1,7 @@
 const Pedido = require('../models/Pedido');
 const PedidoProducto = require('../models/PedidosProductos');
 const supabase = require('../config/SupabaseClient');
+const HistorialEstatusService = require('./historialEstatusService');
 
 class PedidoService {
   // Crear pedido con productos
@@ -88,8 +89,14 @@ class PedidoService {
 
   // Cambiar estatus de pedido
   static async changeStatus(id, newStatusId) {
-    return await Pedido.update(id, { id_estatusp: newStatusId });
-  }
+  const pedidoActualizado = await Pedido.update(id, { 
+    id_estatusp: newStatusId 
+  });
+  
+  await HistorialEstatusService.registrarCambio(id, newStatusId);
+  
+  return pedidoActualizado;
+}
 
   // Obtener pedidos por cliente
   static async getPedidosByCliente(idCliente) {
