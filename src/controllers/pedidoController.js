@@ -77,8 +77,8 @@ class PedidoController {
       console.log('Params:', req.params);
       console.log('Body:', req.body);
       
-      const { id } = req.params;
-      const { id_estatusp } = req.body;
+      const id = req.params.id;
+      const id_estatusp = req.body.id_estatusp;
       
       // Validaciones
       if (!id) {
