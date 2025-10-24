@@ -4,13 +4,9 @@ const Pedido = require('../models/Pedido');
 class HistorialEstatusService {
   // Registrar cambio de estatus
   static async registrarCambio(idPedido, nuevoEstatusId, usuario = null) {
-    // Obtener estatus actual del pedido
-    const pedidoActual = await Pedido.findById(idPedido);
-    
-    // Registrar en historial
     const historialData = {
       id_pedido: idPedido,
-      id_estatusp_anterior: pedidoActual ? pedidoActual.id_estatusp : null,
+      id_estatusp_anterior: null,
       id_estatusp_nuevo: nuevoEstatusId
     };
 
