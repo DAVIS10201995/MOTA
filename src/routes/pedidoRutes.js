@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const PedidoController = require('../controllers/pedidoController');
 
-// IMPORTANTE: Rutas específicas ANTES de rutas con parámetros dinámicos
 
+router.use(express.json());
 // Rutas especializadas (deben ir PRIMERO)
 router.get('/cliente/:idCliente', PedidoController.getByCliente);
 router.get('/estatus/:idEstatus', PedidoController.getByEstatus);
