@@ -89,11 +89,26 @@ class PedidoService {
 
   // Cambiar estatus de pedido
   static async changeStatus(id, newStatusId) {
+  // 1. PRIMERO obtener el pedido actual para conocer el estatus anterior
+  const pedidoActual = await Pedido.findById(id);
+  
+  if (!pedidoActual) {
+    throw new Error('Pedido no encontrado');
+  }
+  
+  const estatusAnteriorId = pedidoActual.id_estatusp;
+  
+  // 2. Actualizar el pedido con el nuevo estatus
   const pedidoActualizado = await Pedido.update(id, { 
     id_estatusp: newStatusId 
   });
   
-  await HistorialEstatusService.registrarCambio(id, newStatusId);
+  // 3. Registrar el cambio en el historial CON el estatus anterior
+  await HistorialEstatusService.registrarCambio(
+    id, 
+    newStatusId, 
+    estatusAnteriorId // Pasar el estatus anterior
+  );
   
   return pedidoActualizado;
 }
