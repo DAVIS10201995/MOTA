@@ -70,35 +70,45 @@ class PedidoController {
     }
   }
 
-  // Cambiar estatus de pedido
-  static async changeStatus(req, res) {
-    try {
-      const result = await PedidoService.changeStatus(
-        req.params.id,
-        req.body.id_estatusp
-      );
-      res.json(result);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
-
-  // Obtener pedidos por cliente
-  static async getByCliente(req, res) {
-    try {
-      const pedidos = await PedidoService.getPedidosByCliente(req.params.idCliente);
-      res.json(pedidos);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  }
-  // Obtener pedidos por estatus
-static async getByEstatus(req, res) {
+static async changeStatus(req, res) {
   try {
-    const pedidos = await PedidoService.getPedidosByEstatus(req.params.idEstatus);
-    res.json(pedidos);
+    console.log('=== PETICIÓN changeStatus ===');
+    console.log('Params:', req.params);
+    console.log('Body:', req.body);
+    
+    const { id } = req.params;
+    const { id_estatusp } = req.body;
+    
+    // Validaciones
+    if (!id) {
+      return res.status(400).json({ error: 'ID de pedido requerido' });
+    }
+    
+    if (!id_estatusp) {
+      return res.status(400).json({ 
+        error: 'id_estatusp es requerido en el body',
+        received: req.body 
+      });
+    }
+    
+    if (isNaN(id_estatusp)) {
+      return res.status(400).json({ 
+        error: 'id_estatusp debe ser un número válido',
+        received: id_estatusp 
+      });
+    }
+    
+    console.log('Llamando a PedidoService.changeStatus...');
+    const result = await PedidoService.changeStatus(id, id_estatusp);
+    
+    console.log('Resultado exitoso:', result);
+    res.json(result);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('❌ ERROR en controller:', error);
+    res.status(400).json({ 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
 

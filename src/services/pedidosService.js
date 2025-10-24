@@ -87,30 +87,48 @@ class PedidoService {
     };
   }
 
-  // Cambiar estatus de pedido
-  static async changeStatus(id, newStatusId) {
-  // 1. PRIMERO obtener el pedido actual para conocer el estatus anterior
-  const pedidoActual = await Pedido.findById(id);
-  
-  if (!pedidoActual) {
-    throw new Error('Pedido no encontrado');
+// Cambiar estatus de pedido
+static async changeStatus(id, newStatusId) {
+  try {
+    console.log('=== INICIO changeStatus ===');
+    console.log('ID Pedido:', id);
+    console.log('Nuevo Estatus ID:', newStatusId);
+    
+    // 1. Obtener el pedido actual
+    console.log('Buscando pedido...');
+    const pedidoActual = await Pedido.findById(id);
+    console.log('Pedido encontrado:', JSON.stringify(pedidoActual, null, 2));
+    
+    if (!pedidoActual) {
+      throw new Error('Pedido no encontrado');
+    }
+    
+    const estatusAnteriorId = pedidoActual.id_estatusp;
+    console.log('Estatus anterior ID:', estatusAnteriorId);
+    
+    // 2. Actualizar el pedido
+    console.log('Actualizando pedido...');
+    const pedidoActualizado = await Pedido.update(id, { 
+      id_estatusp: newStatusId 
+    });
+    console.log('Pedido actualizado:', JSON.stringify(pedidoActualizado, null, 2));
+    
+    // 3. Registrar en historial
+    console.log('Registrando en historial...');
+    await HistorialEstatusService.registrarCambio(
+      id, 
+      newStatusId, 
+      estatusAnteriorId
+    );
+    console.log('Historial registrado correctamente');
+    console.log('=== FIN changeStatus ===');
+    
+    return pedidoActualizado;
+  } catch (error) {
+    console.error('❌ ERROR en changeStatus:', error.message);
+    console.error('Stack:', error.stack);
+    throw error;
   }
-  
-  const estatusAnteriorId = pedidoActual.id_estatusp;
-  
-  // 2. Actualizar el pedido con el nuevo estatus
-  const pedidoActualizado = await Pedido.update(id, { 
-    id_estatusp: newStatusId 
-  });
-  
-  // 3. Registrar el cambio en el historial CON el estatus anterior
-  await HistorialEstatusService.registrarCambio(
-    id, 
-    newStatusId, 
-    estatusAnteriorId // Pasar el estatus anterior
-  );
-  
-  return pedidoActualizado;
 }
 
   // Obtener pedidos por cliente
