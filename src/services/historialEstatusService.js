@@ -10,7 +10,7 @@ class HistorialEstatusService {
     // Registrar en historial
     const historialData = {
       id_pedido: idPedido,
-      id_estatusp_anterior: pedidoActual.id_estatusp,
+      id_estatusp_anterior: pedidoActual ? pedidoActual.id_estatusp : null,
       id_estatusp_nuevo: nuevoEstatusId
     };
 
