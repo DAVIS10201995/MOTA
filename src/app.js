@@ -4,6 +4,26 @@ require('dotenv').config();
 
 const app = express();
 
+app.use(express.json({ 
+  limit: '10mb',
+  verify: (req, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
+
+app.use(express.urlencoded({ 
+  extended: true,
+  limit: '10mb'
+}));
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV 
+  });
+});
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
