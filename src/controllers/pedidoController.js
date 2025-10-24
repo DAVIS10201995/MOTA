@@ -70,57 +70,78 @@ class PedidoController {
     }
   }
 
-static async changeStatus(req, res) {
-  try {
-    console.log('=== PETICIÓN changeStatus ===');
-    console.log('Params:', req.params);
-    console.log('Body:', req.body);
-    
-    const { id } = req.params;
-    const { id_estatusp } = req.body;
-    
-    // Validaciones
-    if (!id) {
-      return res.status(400).json({ error: 'ID de pedido requerido' });
-    }
-    
-    if (!id_estatusp) {
-      return res.status(400).json({ 
-        error: 'id_estatusp es requerido en el body',
-        received: req.body 
+  // Cambiar estatus del pedido
+  static async changeStatus(req, res) {
+    try {
+      console.log('=== PETICIÓN changeStatus ===');
+      console.log('Params:', req.params);
+      console.log('Body:', req.body);
+      
+      const { id } = req.params;
+      const { id_estatusp } = req.body;
+      
+      // Validaciones
+      if (!id) {
+        return res.status(400).json({ error: 'ID de pedido requerido' });
+      }
+      
+      if (!id_estatusp) {
+        return res.status(400).json({ 
+          error: 'id_estatusp es requerido en el body',
+          received: req.body 
+        });
+      }
+      
+      if (isNaN(id_estatusp)) {
+        return res.status(400).json({ 
+          error: 'id_estatusp debe ser un número válido',
+          received: id_estatusp 
+        });
+      }
+      
+      console.log('Llamando a PedidoService.changeStatus...');
+      const result = await PedidoService.changeStatus(id, id_estatusp);
+      
+      console.log('Resultado exitoso:', result);
+      res.json(result);
+    } catch (error) {
+      console.error('❌ ERROR en controller:', error);
+      res.status(400).json({ 
+        error: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       });
     }
-    
-    if (isNaN(id_estatusp)) {
-      return res.status(400).json({ 
-        error: 'id_estatusp debe ser un número válido',
-        received: id_estatusp 
-      });
-    }
-    
-    console.log('Llamando a PedidoService.changeStatus...');
-    const result = await PedidoService.changeStatus(id, id_estatusp);
-    
-    console.log('Resultado exitoso:', result);
-    res.json(result);
-  } catch (error) {
-    console.error('❌ ERROR en controller:', error);
-    res.status(400).json({ 
-      error: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
   }
-}
 
-// Obtener pedidos por prioridad
-static async getByPrioridad(req, res) {
-  try {
-    const pedidos = await PedidoService.getPedidosByPrioridad(req.params.idPrioridad);
-    res.json(pedidos);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+  // Obtener pedidos por prioridad
+  static async getByPrioridad(req, res) {
+    try {
+      const pedidos = await PedidoService.getPedidosByPrioridad(req.params.idPrioridad);
+      res.json(pedidos);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
-}
+
+  // Obtener pedidos por cliente (NUEVO MÉTODO)
+  static async getByCliente(req, res) {
+    try {
+      const pedidos = await PedidoService.getPedidosByCliente(req.params.idCliente);
+      res.json(pedidos);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  // Obtener pedidos por estatus (NUEVO MÉTODO)
+  static async getByEstatus(req, res) {
+    try {
+      const pedidos = await PedidoService.getPedidosByEstatus(req.params.idEstatus);
+      res.json(pedidos);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = PedidoController;
