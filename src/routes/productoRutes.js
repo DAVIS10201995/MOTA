@@ -18,5 +18,6 @@ router.get('/:id', ProductoController.getById);
 router.post('/', validateProduct, ProductoController.create);
 router.put('/:id', validateProduct, ProductoController.update);
 router.delete('/:id', ProductoController.delete);
+router.get('/search/price', ProductoController.searchByPrice);
 
 module.exports = router;

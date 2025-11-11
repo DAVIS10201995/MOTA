@@ -24,6 +24,12 @@ const ProductoService = {
       if (!Producto.validateProductName(productoData.n_producto)) {
         throw new Error('El nombre del producto debe tener entre 3 y 100 caracteres');
       }
+      
+      // Validar precio si se proporciona
+      if (productoData.precio !== undefined && !Producto.validatePrice(productoData.precio)) {
+        throw new Error('El precio debe ser un número válido mayor o igual a 0');
+      }
+
       return await Producto.create(productoData);
     } catch (error) {
       throw new Error(`Error al crear producto: ${error.message}`);
@@ -35,6 +41,12 @@ const ProductoService = {
       if (productoData.n_producto && !Producto.validateProductName(productoData.n_producto)) {
         throw new Error('El nombre del producto debe tener entre 3 y 100 caracteres');
       }
+
+      // Validar precio si se está actualizando
+      if (productoData.precio !== undefined && !Producto.validatePrice(productoData.precio)) {
+        throw new Error('El precio debe ser un número válido mayor o igual a 0');
+      }
+
       const updated = await Producto.update(id, productoData);
       if (!updated) throw new Error('Producto no encontrado');
       return updated;
@@ -61,6 +73,22 @@ const ProductoService = {
       return await Producto.searchByName(name);
     } catch (error) {
       throw new Error(`Error en búsqueda: ${error.message}`);
+    }
+  },
+
+  // Nuevo método para búsqueda por rango de precios
+  async searchByPriceRange(minPrice, maxPrice) {
+    try {
+      const min = parseFloat(minPrice);
+      const max = parseFloat(maxPrice);
+      
+      if (isNaN(min) || isNaN(max) || min < 0 || max < 0 || min > max) {
+        throw new Error('Los precios deben ser números válidos y el precio mínimo no puede ser mayor al máximo');
+      }
+      
+      return await Producto.searchByPriceRange(min, max);
+    } catch (error) {
+      throw new Error(`Error en búsqueda por precio: ${error.message}`);
     }
   }
 };

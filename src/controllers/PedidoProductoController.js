@@ -3,17 +3,16 @@ const PedidoProductoService = require('../services/pedidoProductoService');
 class PedidoProductoController {
   // Agregar productos a pedido
   static async addProducts(req, res) {
-  try {
-    // Cambio aquí: usar req.body directamente (sin .productos)
-    const result = await PedidoProductoService.addProducts(
-      req.params.pedidoId,
-      req.body // ← Array directo
-    );
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    try {
+      const result = await PedidoProductoService.addProducts(
+        req.params.pedidoId,
+        req.body // ← Array directo
+      );
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
-}
 
   // Actualizar producto en pedido
   static async updateProduct(req, res) {

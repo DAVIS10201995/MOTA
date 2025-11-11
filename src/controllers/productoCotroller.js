@@ -65,6 +65,21 @@ const ProductoController = {
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
+  },
+
+  // Nuevo endpoint para búsqueda por rango de precios
+  async searchByPrice(req, res) {
+    try {
+      const { min, max } = req.query;
+      if (!min || !max) {
+        return res.status(400).json({ error: 'Se requieren los parámetros min y max' });
+      }
+      
+      const productos = await ProductoService.searchByPriceRange(min, max);
+      res.json(productos);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
   }
 };
 

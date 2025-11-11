@@ -29,62 +29,76 @@ const PedidoProducto = {
       .from(this.tableName)
       .select(`
         *,
-        producto:productos(id_producto, n_producto, descripcion)
+        producto:productos(id_producto, n_producto, descripcion, precio)
       `)
       .eq('id_pedido', pedidoId);
     
     if (error) throw new Error(error.message);
     return data;
   },
+
   async addProductsToOrder(productosData) {
-  const { data, error } = await supabase
-    .from(this.tableName)
-    .insert(productosData)
-    .select();
+    const { data, error } = await supabase
+      .from(this.tableName)
+      .insert(productosData)
+      .select();
 
-  if (error) throw new Error(error.message);
-  return data;
-},
+    if (error) throw new Error(error.message);
+    return data;
+  },
 
-async updateProductInOrder(pedidoId, productoId, updates) {
-  const { data, error } = await supabase
-    .from(this.tableName)
-    .update(updates)
-    .eq('id_pedido', pedidoId)
-    .eq('id_producto', productoId)
-    .select()
-    .single();
+  async updateProductInOrder(pedidoId, productoId, updates) {
+    // Si se actualiza la cantidad, el subtotal se recalcula automáticamente
+    const { data, error } = await supabase
+      .from(this.tableName)
+      .update(updates)
+      .eq('id_pedido', pedidoId)
+      .eq('id_producto', productoId)
+      .select()
+      .single();
 
-  if (error) throw new Error(error.message);
-  return data;
-},
+    if (error) throw new Error(error.message);
+    return data;
+  },
 
-async removeAllProductsFromOrder(pedidoId) {
-  const { error } = await supabase
-    .from(this.tableName)
-    .delete()
-    .eq('id_pedido', pedidoId);
+  async removeAllProductsFromOrder(pedidoId) {
+    const { error } = await supabase
+      .from(this.tableName)
+      .delete()
+      .eq('id_pedido', pedidoId);
 
-  if (error) throw new Error(error.message);
-  return true;
-},
+    if (error) throw new Error(error.message);
+    return true;
+  },
 
-async getOrderProductsWithDetails(pedidoId) {
-  const { data, error } = await supabase
-    .from(this.tableName)
-    .select(`
-      *,
-      producto:productos(
-        n_producto,
-        descripcion,
-        cantidad:cantidad
-      )
-    `)
-    .eq('id_pedido', pedidoId);
+  async getOrderProductsWithDetails(pedidoId) {
+    const { data, error } = await supabase
+      .from(this.tableName)
+      .select(`
+        *,
+        producto:productos(
+          n_producto,
+          descripcion,
+          precio
+        )
+      `)
+      .eq('id_pedido', pedidoId);
 
-  if (error) throw new Error(error.message);
-  return data;
-}
+    if (error) throw new Error(error.message);
+    return data;
+  },
+
+  // Nuevo método para obtener el precio actual de un producto
+  async getProductPrice(productoId) {
+    const { data, error } = await supabase
+      .from('productos')
+      .select('precio')
+      .eq('id_producto', productoId)
+      .single();
+
+    if (error) throw new Error(`Error al obtener precio del producto: ${error.message}`);
+    return data.precio;
+  }
 };
 
 module.exports = PedidoProducto;
