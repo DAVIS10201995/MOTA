@@ -39,6 +39,7 @@ const prioridadRutes = require('./routes/prioridadRutes');
 const peedidoRutes = require('./routes/pedidoRutes');
 const pedidoProductoRutes = require('./routes/pedidoProductoRutes');
 const historialEstatusPedidoRoutes = require('./routes/historialEstatusRoutes');
+const notificaciones = require('./routes/notificationRoutes');
 
 app.use('/api/areas', areaRoutes);
 app.use('/api/funciones', funcionRoutes);
@@ -50,6 +51,7 @@ app.use('/api/prioridad', prioridadRutes);
 app.use('/api/pedidos', peedidoRutes);
 app.use('/api/pedidos-productos', pedidoProductoRutes);
 app.use('/api/historial-estatus',historialEstatusPedidoRoutes);
+app.use('/api/notificaciones',notificaciones);
 
 // Manejo de errores
 app.use((err, req, res, next) => {
