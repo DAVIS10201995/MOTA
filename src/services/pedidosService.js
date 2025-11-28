@@ -13,6 +13,7 @@ class PedidoService {
         id_pedido: pedido.id_pedido,
         id_producto: p.id_producto,
         cantidad: p.cantidad,
+        comentario: p.comentario || null,
         precio_unitario: p.precio_unitario
       }));
       await PedidoProducto.addProductsToOrder(productosData);
@@ -52,6 +53,7 @@ class PedidoService {
         id_pedido: id,
         id_producto: p.id_producto,
         cantidad: p.cantidad,
+        comentario: p.comentario || null,
         precio_unitario: p.precio_unitario
       }));
       await PedidoProducto.addProductsToOrder(productosData);
