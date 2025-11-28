@@ -17,6 +17,7 @@ class PedidoProductoService {
           id_pedido: pedidoId,
           id_producto: p.id_producto,
           cantidad: p.cantidad,
+          comentario: p.cpmentario || null,
           // NO enviamos precio_unitario - el trigger lo asignará automáticamente
         };
       })
@@ -41,7 +42,7 @@ class PedidoProductoService {
       pedidoId,
       productoId,
       updates
-    );
+    );a
   }
 
   // Eliminar un producto del pedido
